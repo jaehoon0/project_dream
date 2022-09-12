@@ -9,9 +9,10 @@ Stat::Stat(int hp_, int atk_, int def_):totalHp(hp_), remainHp(hp_), atk(atk_), 
 
 Stat::Stat(int hp_, int atk_, int def_, int sp_):totalHp(hp_), remainHp(hp_), atk(atk_), def(def_), sp(sp_) {};
 
-void Stat::damaged(const Stat& otherStat) {
+int Stat::damaged(const Stat& otherStat) {
     int giveDamage=otherStat.atk*((double)otherStat.atk/def);
     remainHp=remainHp-giveDamage>0 ? remainHp-giveDamage : 0;
+    return giveDamage;
 }
 
 bool Stat::is_dead() const {
@@ -20,7 +21,8 @@ bool Stat::is_dead() const {
 
 Stat& Stat::operator+=(const Stat& otherStat) {
     if(this->totalHp==0) {
-        this->remainHp=0;
+        this->totalHp=otherStat.totalHp;
+        remainHp=totalHp;
     }
     else {
         double hpRatio=(double)this->remainHp / this->totalHp;

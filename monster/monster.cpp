@@ -1,5 +1,13 @@
 #include "monster.h"
 
+namespace monster {
+    void get_enter() {
+        char next='n';
+        while(next!='\n')
+            cin.get(next);
+    }
+}
+
 Monster::Monster() {}
 
 Monster::Monster(string name):Creature(name) {}
@@ -13,7 +21,11 @@ Stat Monster::get_stat() const {
 }
 
 void Monster::attacked(const Creature& enemy) {
-    stat.damaged(enemy.get_stat());
+    int damage;
+    damage=stat.damaged(enemy.get_stat());
+    cout<<name<<"은 "<<damage<<"의 피해를 입었다..!!"<<endl;
+    cin.ignore();
+    monster::get_enter();
 }
 
 void Monster::show_status() const {

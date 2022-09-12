@@ -21,7 +21,7 @@ void Koh::event_start(Character& character) {
     cout<<"대장장이: 깡깡!! 돈만 주시면 어떤 무기든 강화해 드립니다~!~!"<<endl;
     event::get_enter();
     
-    character.show_status();
+    character.show_detail_status();
     cout<<"---강화할 무기를 선택하세요---"<<endl;
     cout<<"================================"<<endl;
     cout<<"1. 무기"<<endl;

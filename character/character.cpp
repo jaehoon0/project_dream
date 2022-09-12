@@ -1,5 +1,13 @@
 #include "character.h"
 
+namespace character {
+    void get_enter() {
+        char next='n';
+        while(next!='\n')
+            cin.get(next);
+    }
+}
+
 //예비
 Character::Character() {}
 
@@ -32,10 +40,11 @@ void Character::set_weapon(Weapon weapon) {
     weapons[weapon.get_type()]=weapon;
 }
 
-void Character::choose_action(Creature& enemy) {
+int Character::choose_action(Creature& enemy) {
     cout<<"================================================="<<endl;
     cout<<"================================================="<<endl;
     cout<<"원하는 선택지 번호를 입력하십시오"<<endl;
+    cout<<"0. "<<"내 정보 상세보기"<<endl;
     cout<<"1. "<<"기본 공격"<<endl;
     cout<<"2. "<<"스킬 사용"<<endl;
     cout<<"3. "<<"도망"<<endl;
@@ -43,10 +52,17 @@ void Character::choose_action(Creature& enemy) {
     cout<<"================================================="<<endl;
 
     bool befSelected=true;
+    int selection;
     while(befSelected) {
-        int selection;
         cin>>selection;
         switch(selection) {
+            case 0:
+                show_detail_status();
+                cout<<"(---스토리를 진행하시려면 Enter를 눌러주세요---)"<<endl;
+                cin.ignore();
+                character::get_enter();
+                befSelected=false;
+                break;
             case 1: 
                 enemy.attacked(*this);
                 befSelected=false;
@@ -58,8 +74,7 @@ void Character::choose_action(Creature& enemy) {
                 break;
         }
     }
-    
-
+    return selection;
 }
 
 void Character::acquire_stat(const Stat other) {
@@ -74,22 +89,35 @@ int& Character::get_money() {
     return money;
 }
 
+void Character::show_detail_status() const {
+    cout<<name<<"(Player):"<<endl;
+    cout<<"보유 코인: "<<money<<endl;
+    cout<<stat;
+
+    weapons[0].show_status();
+    weapons[1].show_status();
+}
+
 Stat Character::get_stat() const {
     Stat statSum=stat+weapons[0].get_stat()+weapons[1].get_stat();
     return statSum;
 }
     
 void Character::attacked(const Creature& enemy) {
-    stat.damaged(enemy.get_stat());
+    int damage;
+    damage=stat.damaged(enemy.get_stat());
+    cout<<name<<"은 "<<damage<<"의 피해를 입었다..!!"<<endl;
+    cin.ignore();
+    character::get_enter();
 }
 void Character::show_status() const {
     cout<<name<<"(Player):"<<endl;    
-    //cout<<"TOTAL: "<<endl;
-    //cout<<get_stat();    
-    cout<<stat;
+    Stat tempStat(0, 0, 0);
+    tempStat+=stat;
+    tempStat+=weapons[0].get_stat();
+    tempStat+=weapons[1].get_stat();
 
-    weapons[0].show_status();
-    weapons[1].show_status();
+    cout<<tempStat;
 }
 
 bool Character::is_dead() const{

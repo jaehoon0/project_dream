@@ -50,4 +50,5 @@ int main() {
         scen->read();
         delete scen;
     }
+    return 0;
 }

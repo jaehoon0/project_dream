@@ -120,7 +120,7 @@ Monster Manager::generate_enemy(int& monsterLevel) {
     //확률 계산
     int rate[4]={100, 0, 0, 0};
     int standard[4]={50, 30, 15, 5};
-    int scenarioPoint=scenarioIndex*5;
+    int scenarioPoint=scenarioIndex;
 
     for(int i=0; i<3; i++) {
         if(scenarioPoint<=0)
@@ -180,9 +180,15 @@ void Manager::battle(Character& character) {
     cout<<"당신은 그곳에서 "+levelMent[monsterLevel]+" 적과 마주쳤다!!"<<endl;
     manager::get_enter();
     
-    while(true) {            
-        show_status(character, enemy);
-        character.choose_action(enemy); 
+    while(true) {
+        while(true) {
+            show_status(character, enemy);
+            int selection=character.choose_action(enemy);
+            if(selection!=0)
+                break;
+            cout << "\x1B[2J\x1B[H";
+        }
+
         show_status(character, enemy);
         if(enemy.is_dead()) {
             cin.ignore();
@@ -200,6 +206,16 @@ void Manager::battle(Character& character) {
         show_status(character, enemy);
         if(character.is_dead()) {
             cout<<"패배하였습니다."<<endl;
+            manager::get_enter();
+            cout<<"..."<<endl;
+            manager::get_enter();
+            cout<<"..."<<endl;
+            manager::get_enter();
+            cout<<"으아악...!!!"<<endl;
+            manager::get_enter();
+            cout<<"뭐...뭐야 꿈이었구나..."<<endl;
+            manager::get_enter();
+            cout<<"End"<<endl;
             break;
         }
     }        
@@ -217,7 +233,7 @@ void Manager::normal_event(Character& character) {
 void Manager::show_status(const Character& character, const Monster& enemy) const {
     cout << "\x1B[2J\x1B[H";
     cout<<"Chapter "<<chapterIndex<<endl;
-    cout<<"S#"<<scenarioIndex<<endl<<endl;
+    cout<<"Scenario: #"<<scenarioIndex<<endl<<endl;
     enemy.show_status();
     cout<<endl;
     character.show_status();
