@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Stat::Stat():totalHp(1), remainHp(1), atk(0), def(0), sp(0) {}
+Stat::Stat():totalHp(0), remainHp(0), atk(0), def(0), sp(0) {}
 
 Stat::Stat(int hp_, int atk_, int def_):totalHp(hp_), remainHp(hp_), atk(atk_), def(def_), sp(0) {};
 
@@ -14,13 +14,30 @@ void Stat::damaged(const Stat& otherStat) {
     remainHp=remainHp-giveDamage>0 ? remainHp-giveDamage : 0;
 }
 
+bool Stat::is_dead() const {
+    return remainHp<=0;    
+}
+
 Stat& Stat::operator+=(const Stat& otherStat) {
-    double hpRatio=(double)this->remainHp / this->totalHp;
-    this->totalHp+=otherStat.totalHp;
-    this->remainHp=this->totalHp*hpRatio;
+    if(this->totalHp==0) {
+        this->remainHp=0;
+    }
+    else {
+        double hpRatio=(double)this->remainHp / this->totalHp;
+        this->totalHp+=otherStat.totalHp;
+        this->remainHp=this->totalHp*hpRatio;        
+    }
     this->atk+=otherStat.atk;
     this->def+=otherStat.def;
     return *this;
+}
+
+Stat Stat::operator+(const Stat& otherStat) const {
+    int resultHp=totalHp+otherStat.totalHp;
+    int resultAtk=atk+otherStat.atk;
+    int resultDef=def+otherStat.def;
+    Stat resultStat(resultHp, resultAtk, resultDef);
+    return resultStat;
 }
 
 ostream& operator<<(ostream& os, const Stat stat) {
@@ -28,5 +45,6 @@ ostream& operator<<(ostream& os, const Stat stat) {
     cout<<"HP  ---------- "<<stat.remainHp<<'/'<<stat.totalHp<<endl;
     cout<<"ATK ---------- "<<stat.atk<<endl;
     cout<<"DEF ---------- "<<stat.def<<endl;
+    cout<<"==================="<<endl;
     return os;
 }

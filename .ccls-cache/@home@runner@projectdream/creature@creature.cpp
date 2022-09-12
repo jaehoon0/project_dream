@@ -11,7 +11,3 @@ Creature::Creature(string name_, int hp_, int atk_, int def_, int sp_):name(name
 Stat Creature::get_stat() const {
     return stat;
 }
-
-void Creature::attacked(const Creature& enemy) {
-    stat.damaged(enemy.stat);
-}

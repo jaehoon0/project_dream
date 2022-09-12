@@ -17,7 +17,9 @@ public:
     Stat(int hp_, int atk_, int def_);
     Stat(int hp_, int atk_, int def_, int sp_);
     void damaged(const Stat& otherStat);
+    bool is_dead() const;
     Stat& operator+=(const Stat& otherStat);
+    Stat operator+(const Stat& otherStat) const;
     friend ostream& operator<<(ostream& os, const Stat stat);
 };
 #endif

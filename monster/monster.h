@@ -9,8 +9,10 @@ public:
     Monster(string name);
     Monster(string name, int hp_, int atk_, int def_);
     Monster(string name, int hp_, int atk_, int def_,  int sp_);
+    virtual Stat get_stat() const;
     virtual void attacked(const Creature& enemy);
-    virtual void showStatus() const;
+    virtual void show_status() const;
+    virtual bool is_dead() const;
 };
 
 #endif
