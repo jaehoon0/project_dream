@@ -17,6 +17,8 @@ public:
     Stat(int hp_, int atk_, int def_);
     Stat(int hp_, int atk_, int def_, int sp_);
     int damaged(const Stat& otherStat);
+    int cal_power() const;
+    int cal_value() const;
     bool is_dead() const;
     Stat& operator+=(const Stat& otherStat);
     Stat operator+(const Stat& otherStat) const;

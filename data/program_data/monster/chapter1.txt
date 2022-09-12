@@ -1,14 +1,14 @@
-Hatchling Dragon/100000/10000/10000/3
-Phoenix/6000/300/1000/2
-HellHound/2000/300/100/1
-RedFox/800/80/100/1
-Salamander/500/80/20/1
-Kobold/100/10/10/1
-Goblin/50/10/10/1
-Lycaon/30/10/10/0
-Viper/10/10/3/0
-Eagle/10/5/5/0
-FennecFox/10/2/3/0
-DeathStalker/5/2/2/0
-Mouse/5/1/1/0
-GrassHopper/1/1/1/0
+Hatchling Dragon(헤츨링 드래곤)/100000/10000/10000/3
+Phoenix(불사조)/6000/300/1000/2
+HellHound(지옥개)/2000/300/100/1
+RedFox(불여우)/800/80/100/1
+Salamander(살라맨더)/500/80/20/1
+Kobold(코볼트)/130/45/35/1
+Goblin(고블린)/100/40/35/1
+Lycaon(늑대)/50/31/20/0
+Viper(독사)/20/27/3/0
+Eagle(독수리)/20/13/10/0
+FennecFox(사막 여우)/15/12/8/0
+DeathStalker(전갈)/8/9/6/0
+Mouse(쥐)/5/4/3/0
+GrassHopper(메뚜기)/3/3/1/0

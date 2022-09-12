@@ -15,7 +15,7 @@ Character::Character() {}
 Character::Character(string name): Creature(name) {}
 
 //모든 Character는 이름과 스탯을 가짐
-Character::Character(string name, int hp_, int atk_, int def_, int sp_): Creature(name, hp_, atk_, def_, sp_), money(0) {
+Character::Character(string name, int hp_, int atk_, int def_, int sp_): Creature(name, hp_, atk_, def_, sp_), money(100) {
     if(name=="RICH") {
         money=10000;      
     }
@@ -31,7 +31,7 @@ Character::Character(string name, int hp_, int atk_, int def_, int sp_): Creatur
     }
 
     Weapon weapon("dagger", 0, 0, 2, 0);
-    Weapon armor("chain-mail", 1, 0, 0, 5);
+    Weapon armor("linen armor", 1, 0, 0, 5);
     set_weapon(weapon);
     set_weapon(armor);
 }
@@ -102,18 +102,21 @@ Stat Character::get_stat() const {
     Stat statSum=stat+weapons[0].get_stat()+weapons[1].get_stat();
     return statSum;
 }
+
+int Character::get_power_point() const {
+    return stat.cal_power();
+}
     
 void Character::attacked(const Creature& enemy) {
     int damage;
     damage=stat.damaged(enemy.get_stat());
     cout<<name<<"은 "<<damage<<"의 피해를 입었다..!!"<<endl;
-    cin.ignore();
     character::get_enter();
 }
 void Character::show_status() const {
     cout<<name<<"(Player):"<<endl;    
     Stat tempStat(0, 0, 0);
-    tempStat+=stat;
+    tempStat=stat;
     tempStat+=weapons[0].get_stat();
     tempStat+=weapons[1].get_stat();
 

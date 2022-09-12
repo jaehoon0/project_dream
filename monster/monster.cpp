@@ -16,8 +16,16 @@ Monster::Monster(string name, int hp_, int atk_, int def_): Creature(name, hp_, 
 
 Monster::Monster(string name, int hp_, int atk_, int def_,  int sp_): Creature(name, hp_, atk_, def_, sp_) {}
 
+int Monster::cal_value_point() const {
+    return stat.cal_value();
+}
+
 Stat Monster::get_stat() const {
     return stat;
+}
+
+int Monster::get_power_point() const {
+    return stat.cal_power();
 }
 
 void Monster::attacked(const Creature& enemy) {

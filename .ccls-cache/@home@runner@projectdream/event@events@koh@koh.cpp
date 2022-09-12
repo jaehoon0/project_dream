@@ -32,7 +32,9 @@ void Koh::event_start(Character& character) {
     cin>>index;
     if(index>2 || index<1) {
         cout<<"감히 대장장이 앞에서 장난을 치다니!!!"<<endl;
+        event::get_enter();    
         cout<<"망치로 맞기 전에 썩 꺼지거라 이노옴!!"<<endl;
+        event::get_enter();    
         cout<<"(당신은 서둘러 도망쳐 나왔다)"<<endl;
         event::get_enter();        
     }

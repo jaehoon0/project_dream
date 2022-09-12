@@ -55,6 +55,37 @@ Manager::Manager():chapterIndex(1), scenarioIndex(1) {
         }
         encounterBit[i]=totalBit;
     }
+    
+    ifstream weaponData("./data/program_data/weapon/weapon.txt");
+    while(weaponData.getline(line, sizeof(line))) {        
+        int start=0;
+        string separator="/";
+        string data=string(line);
+        int divideIndex=data.find(separator);
+        vector<string> temp;
+        
+        while(divideIndex!=-1) {
+            temp.push_back(data.substr(start, divideIndex-start));
+            start=divideIndex+1;
+            divideIndex = data.find(separator, start);
+        }
+        temp.push_back(data.substr(start, divideIndex-start));
+
+        int type;
+        int hp, atk, def;
+        stringstream typeInt(temp[1]);
+        typeInt >> type;
+        stringstream hpInt(temp[2]);
+	    hpInt >> hp;
+        stringstream atkInt(temp[3]);
+	    atkInt >> atk;
+        stringstream defInt(temp[4]);
+	    defInt >> def;
+
+        Weapon weapon(temp[0], type, hp, atk, def);
+        weapons[type].push_back(weapon);
+    }
+    weaponData.close();
 }
 
 Manager::Manager(int chapterIndex):chapterIndex(chapterIndex), scenarioIndex(1) {
@@ -99,16 +130,47 @@ Manager::Manager(int chapterIndex):chapterIndex(chapterIndex), scenarioIndex(1) 
         }
         encounterBit[i]=totalBit;
     }
+
+    ifstream weaponData("./data/program_data/weapon/weapon.txt");
+    while(weaponData.getline(line, sizeof(line))) {        
+        int start=0;
+        string separator="/";
+        string data=string(line);
+        int divideIndex=data.find(separator);
+        vector<string> temp;
+        
+        while(divideIndex!=-1) {
+            temp.push_back(data.substr(start, divideIndex-start));
+            start=divideIndex+1;
+            divideIndex = data.find(separator, start);
+        }
+        temp.push_back(data.substr(start, divideIndex-start));
+
+        int type;
+        int hp, atk, def;
+        stringstream typeInt(temp[1]);
+        typeInt >> type;
+        stringstream hpInt(temp[2]);
+	    hpInt >> hp;
+        stringstream atkInt(temp[3]);
+	    atkInt >> atk;
+        stringstream defInt(temp[4]);
+	    defInt >> def;
+
+        Weapon weapon(temp[0], type, hp, atk, def);
+        weapons[type].push_back(weapon);
+    }
+    weaponData.close();
 }
 
 void Manager::generate_event(Character& character) {
     random_device rd;
     mt19937 gen(rd());    
-    uniform_int_distribution<int> typeDis(1, 100);
+    uniform_int_distribution<int> typeDis(1, 10000000);
     
     int selectEvent=typeDis(gen);
 
-    if(selectEvent<31) {
+    if(selectEvent<3000000) {
         normal_event(character);
     }
     else {
@@ -119,24 +181,30 @@ void Manager::generate_event(Character& character) {
 Monster Manager::generate_enemy(int& monsterLevel) {
     //확률 계산
     int rate[4]={100, 0, 0, 0};
-    int standard[4]={50, 30, 15, 5};
-    int scenarioPoint=scenarioIndex;
+    int standard[4]={40, 40, 15, 5};
+    int scenarioPoint=scenarioIndex*1.5;
 
-    for(int i=0; i<3; i++) {
+    if(scenarioPoint<rate[0]-standard[0]) {
+        rate[0]-=scenarioPoint;
+    }
+    else {
+        rate[0]=standard[0];
+        scenarioPoint=rate[0]-standard[0];
+    }
+
+    for(int i=1; i<4; i++) {
         if(scenarioPoint<=0)
             break;
-        rate[i]-=scenarioPoint;
-        rate[i+1]+=scenarioPoint;
-        scenarioPoint=0;
 
-        if(rate[i]<standard[i]) {
-            int gap=standard[i]-rate[i];
+        if(scenarioPoint>standard[i]) {
             rate[i]=standard[i];
-            rate[i+1]-=gap;
-            scenarioPoint+=gap;
+            scenarioPoint-=standard[i];
+        }
+        else {
+            rate[i]+=scenarioPoint;
+            scenarioPoint=0;
         }
     }
-    rate[3]=min(rate[3], standard[3]);
 
     //한번만 등장하는 몬스터 제외
     for(int i=1; i>=0; i--) {
@@ -169,6 +237,25 @@ Monster Manager::generate_enemy(int& monsterLevel) {
     return monsters[monsterType][monsterIndex];
 }
 
+Weapon Manager::generate_weapon(const int monsterLevel) const {
+    const int targetScen=77;
+    const int targetMonLevel=3;
+    const int targetMon=targetMonLevel*25;
+    const int target=targetScen+targetMon;
+    
+    random_device rd;
+    mt19937 gen(rd());    
+    uniform_int_distribution<int> typeDis(1, 10000000);
+    int type=typeDis(gen)%2;
+
+    int size=weapons[type].size();
+    const int gap=target/size;
+    int index=(monsterLevel*25+scenarioIndex)/gap;
+    index=min(index, size-1);
+
+    return weapons[type][index];
+}
+
 void Manager::battle(Character& character) {
     int monsterLevel;
     Monster enemy=generate_enemy(monsterLevel);
@@ -179,44 +266,87 @@ void Manager::battle(Character& character) {
     manager::get_enter();
     cout<<"당신은 그곳에서 "+levelMent[monsterLevel]+" 적과 마주쳤다!!"<<endl;
     manager::get_enter();
+    random_device rd;
+    mt19937 gen(rd());    
+    uniform_int_distribution<int> typeDis(1, 10000000);
+
+    int standard=10000000/2;
+    int adjust=1000000;
     
     while(true) {
-        while(true) {
-            show_status(character, enemy);
-            int selection=character.choose_action(enemy);
-            if(selection!=0)
-                break;
-            cout << "\x1B[2J\x1B[H";
-        }
-
-        show_status(character, enemy);
-        if(enemy.is_dead()) {
-            cin.ignore();
-            cout<<"승리하였습니다. 능력치가 강화됩니다"<<endl;
-            character.acquire_stat(enemy.get_stat());
-            int& money=character.get_money();
-            money+=100;
-            cout<<100<<"코인을 획득하였습니다"<<endl;
+        int turn=typeDis(gen);
+        manager::get_enter();
+        if((turn<=standard && scenarioIndex%2==0) || (turn>standard && scenarioIndex%2==1)) {
+            if(scenarioIndex%2==0)
+                standard-=adjust;
+            else
+                standard+=adjust;
             
-            manager::get_enter();
-            break;
+            while(true) {
+                show_status(character, enemy);
+                int selection=character.choose_action(enemy);
+                if(selection!=0)
+                    break;
+                cout << "\x1B[2J\x1B[H";
+            }
+    
+            show_status(character, enemy);
+            if(enemy.is_dead()) {
+                cout<<"승리하였습니다. 능력치가 강화됩니다"<<endl;
+                character.acquire_stat(enemy.get_stat());
+                int& money=character.get_money();
+                money+=enemy.cal_value_point()*scenarioIndex/3;
+                cout<<enemy.cal_value_point()*scenarioIndex/3<<"코인을 획득하였습니다"<<endl;                
+                manager::get_enter();
+                
+                if(turn<1000000) {
+                    cout<<"장비를 획득하였습니다"<<endl;
+                    Weapon weapon=generate_weapon(monsterLevel);
+                    weapon.show_status();
+                    manager::get_enter();
+                    while(true) {
+                        cout<<"<< ---현재 장비와 바꾸시겠습니까?? (Y/N)--- >>"<<endl;
+                        char input;
+                        cin>>input;
+                        if(input=='y' || input=='Y') {
+                            character.set_weapon(weapon);
+                            break;
+                        }
+                        else if(input=='n' || input=='N') {
+                            break;
+                        }
+                        cout<<"잘못된 입력입니다...!"<<endl;
+                    }                    
+                }
+                break;
+            }            
         }
-        
-        character.attacked(enemy);
-        show_status(character, enemy);
-        if(character.is_dead()) {
-            cout<<"패배하였습니다."<<endl;
-            manager::get_enter();
-            cout<<"..."<<endl;
-            manager::get_enter();
-            cout<<"..."<<endl;
-            manager::get_enter();
-            cout<<"으아악...!!!"<<endl;
-            manager::get_enter();
-            cout<<"뭐...뭐야 꿈이었구나..."<<endl;
-            manager::get_enter();
-            cout<<"End"<<endl;
-            break;
+        else {
+            if(scenarioIndex%2==0)
+                standard+=adjust;
+            else
+                standard-=adjust;
+            
+            standard+=adjust;
+            show_status(character, enemy);
+            cout<<"적의 공격!"<<endl;
+            character.attacked(enemy);
+            
+            show_status(character, enemy);
+            if(character.is_dead()) {
+                cout<<"패배하였습니다."<<endl;
+                manager::get_enter();
+                cout<<"..."<<endl;
+                manager::get_enter();
+                cout<<"..."<<endl;
+                manager::get_enter();
+                cout<<"으아악...!!!"<<endl;
+                manager::get_enter();
+                cout<<"뭐...뭐야 꿈이었구나..."<<endl;
+                manager::get_enter();
+                cout<<"End"<<endl;
+                break;
+            }            
         }
     }        
     scenarioIndex++;
@@ -238,6 +368,16 @@ void Manager::show_status(const Character& character, const Monster& enemy) cons
     cout<<endl;
     character.show_status();
     cout<<endl;
+    
+    if(character.get_power_point()>enemy.get_power_point()*5) cout<<"<< 매우 우세 >>"<<endl;
+    else if(character.get_power_point()>enemy.get_power_point()*2) cout<<"<< 상당히 우세 >>"<<endl;
+    else if(character.get_power_point()>enemy.get_power_point()) cout<<"<< 약 우세 >>"<<endl;
+    
+    if(character.get_power_point()*5<enemy.get_power_point()) cout<<"<< 매우 열세 >>"<<endl;
+    else if(character.get_power_point()*2<enemy.get_power_point()) cout<<"<< 상당히 열세 >>"<<endl;
+    else if(character.get_power_point()<enemy.get_power_point()) cout<<"<< 약 열세 >>"<<endl;
+
+    if(character.get_power_point()==enemy.get_power_point()) cout<<"<< 승패를 알 수 없음 >>"<<endl;
 }
 
 bool Manager::is_clear() {

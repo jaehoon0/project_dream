@@ -20,6 +20,7 @@ public:
     int& get_money();
     void show_detail_status() const;
     virtual Stat get_stat() const;
+    virtual int get_power_point() const;
     virtual void attacked(const Creature& enemy);
     virtual void show_status() const;
     virtual bool is_dead() const;

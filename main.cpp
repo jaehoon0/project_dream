@@ -45,6 +45,19 @@ int main() {
             manager.generate_event(player);
         
         if(player.is_dead()) break;
+        cout<<"< --- 꿈도로에 도착했습니다! --- >"<<endl;
+        while(!player.is_dead()) {
+            cout<<"이 잎은 위험하지만 더 간다면 좋은 보상을 얻을 수도 있어..."<<endl;
+            cout<<"어떻게 하는게 좋을까?!?"<<endl;
+            cout<<"============================================="<<endl;
+            cout<<"1. 위험을 감수하고 조금 더 가본다"<<endl;
+            cout<<"2. 다음 별로 이동한다"<<endl;
+            cout<<"============================================="<<endl;
+            int input;
+            cin>>input;
+            if(input==2) break;
+            manager.generate_event(player);
+        }
         
         scen=new Reader(scenarioAdd+to_string(chapter)+"-2.txt");
         scen->read();

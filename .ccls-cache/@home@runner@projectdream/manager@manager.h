@@ -3,6 +3,7 @@
 
 #include "../monster/monster.h"
 #include "../character/character.h"
+#include "../weapon/weapon.h"
 #include "../event/event.h"
 #include "../event/events/koh/koh.h"
 #include "../event/events/merchant/merchant.h"
@@ -13,6 +14,7 @@ private:
     int chapterIndex;
     int scenarioIndex;
     vector<Monster> monsters[4];
+    vector<Weapon> weapons[2];
     vector<bool> isEncounter[2];
     int encounterBit[2];
 public:

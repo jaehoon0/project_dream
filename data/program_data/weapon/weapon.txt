@@ -1,0 +1,29 @@
+dagger/0/0/2/0
+double-edged sword/0/0/30/0
+shot sword/0/0/400/4
+longsword/0/0/800/0
+arming sword/0/0/700/2
+bastard sword/0/0/800/1
+great sword/0/0/1200/0
+xiphos/0/0/800/500
+mediterranean sword/0/0/1000/4
+viking sword/0/0/1200/4
+rumpia/0/0/2000/5
+kopis/0/0/1600/1000
+makhaira/0/0/1800/1000
+falcata/0/0/3500/1500
+kophesh/0/0/4000/2000
+falx/0/0/4200/2000
+Gladius/0/0/60000/40000
+double-dragon sword/0/0/100000/100000
+excalibur/0/0/150000/50000
+quad-dragon/0/0/400000/100000
+quad-tiger/0/0/300000/200000
+seven-star/0/0/456000/321000
+linen armor/1/0/0/5
+leather armor/1/0/0/1000
+laminar armour/1/0/0/20000
+Cuirass armor/1/0/0/40000
+chain-mail/1/0/0/80000
+full-plate/1/0/0/160000
+dragon-plate/1/0/0/320000

@@ -10,9 +10,22 @@ Stat::Stat(int hp_, int atk_, int def_):totalHp(hp_), remainHp(hp_), atk(atk_), 
 Stat::Stat(int hp_, int atk_, int def_, int sp_):totalHp(hp_), remainHp(hp_), atk(atk_), def(def_), sp(sp_) {};
 
 int Stat::damaged(const Stat& otherStat) {
-    int giveDamage=otherStat.atk*((double)otherStat.atk/def);
+    int giveDamage;
+    if(def==0)
+        giveDamage=999999999;
+    else
+        giveDamage=otherStat.atk*otherStat.atk/(double)def;
+        giveDamage/=3;
     remainHp=remainHp-giveDamage>0 ? remainHp-giveDamage : 0;
     return giveDamage;
+}
+
+int Stat::cal_power() const {
+    return remainHp/4+atk+def;
+}
+
+int Stat::cal_value() const {
+    return totalHp/4+atk+def;
 }
 
 bool Stat::is_dead() const {

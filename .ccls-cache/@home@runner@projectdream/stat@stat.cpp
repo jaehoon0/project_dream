@@ -10,7 +10,11 @@ Stat::Stat(int hp_, int atk_, int def_):totalHp(hp_), remainHp(hp_), atk(atk_), 
 Stat::Stat(int hp_, int atk_, int def_, int sp_):totalHp(hp_), remainHp(hp_), atk(atk_), def(def_), sp(sp_) {};
 
 int Stat::damaged(const Stat& otherStat) {
-    int giveDamage=otherStat.atk*((double)otherStat.atk/def);
+    int giveDamage;
+    if(def==0)
+        giveDamage=999999999;
+    else
+        giveDamage=otherStat.atk*4/(double)def;
     remainHp=remainHp-giveDamage>0 ? remainHp-giveDamage : 0;
     return giveDamage;
 }
